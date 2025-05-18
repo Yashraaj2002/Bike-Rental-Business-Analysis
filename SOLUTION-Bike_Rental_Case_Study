@@ -1,0 +1,138 @@
+📊 Bike Rental Shop – SQL Case Study Solutions
+
+1. How many bikes does the shop own in each category (only categories with more than 2 bikes)?
+
+SELECT 
+    category,
+    COUNT(*) AS no_of_bikes
+FROM BIKE
+GROUP BY category
+HAVING COUNT(*) > 2;
+
+💡 Insight:
+This helps Emily identify which bike categories have sufficient inventory. Categories with fewer than 2 bikes are excluded — she may need to restock those to meet potential demand.
+
+2. How many memberships has each customer purchased (including those with none), sorted by the highest count?
+
+SELECT 
+    c.name,
+    COUNT(m.id) AS membership_count
+FROM customer c
+LEFT JOIN membership m ON c.id = m.customer_id
+GROUP BY c.name
+ORDER BY membership_count DESC;
+
+💡 Insight:
+Emily can recognize her most loyal customers and consider targeting them with rewards or exclusive promotions. Customers with 0 memberships are potential leads for upselling.
+
+3. What are the new discounted rental prices (hourly and daily) for each bike category, along with original prices?
+
+SELECT 
+    id,
+    category,
+    price_per_hour AS old_price_per_hour,
+    price_per_day AS old_price_per_day,
+
+    CASE 
+        WHEN category = 'electric' THEN ROUND(price_per_hour * 0.9, 2)
+        WHEN category = 'mountain bike' THEN ROUND(price_per_hour * 0.8, 2)
+        ELSE ROUND(price_per_hour * 0.5, 2)
+    END AS new_price_per_hour,
+
+    CASE 
+        WHEN category = 'electric' THEN ROUND(price_per_day * 0.8, 2)
+        WHEN category = 'mountain bike' THEN ROUND(price_per_day * 0.5, 2)
+        ELSE ROUND(price_per_day * 0.5, 2)
+    END AS new_price_per_day
+
+FROM bike;
+
+💡 Insight:
+This query supports the implementation of seasonal promotions. Emily can visualize the pricing impact and ensure that profit margins are preserved even with winter discounts.
+
+4. How many bikes are currently available and how many are rented, by category?
+
+SELECT 
+    category,
+    COUNT(CASE WHEN status = 'available' THEN 1 END) AS available_bikes_count,
+    COUNT(CASE WHEN status = 'rented' THEN 1 END) AS rented_bikes_count
+FROM bike
+GROUP BY category;
+
+💡 Insight:
+This gives a snapshot of current bike utilization. If a category has more rented bikes, it may be a sign of higher demand — Emily can invest more in those categories.
+
+5. What is the total rental revenue broken down by month, year, and all-time, including subtotals and grand total?
+
+SELECT 
+    TO_CHAR(start_timestamp, 'YYYY') AS year,
+    EXTRACT(MONTH FROM start_timestamp) AS month,
+    SUM(total_paid) AS revenue
+FROM rental
+GROUP BY ROLLUP (
+    TO_CHAR(start_timestamp, 'YYYY'),
+    EXTRACT(MONTH FROM start_timestamp)
+)
+ORDER BY 
+    TO_CHAR(start_timestamp, 'YYYY'),
+    EXTRACT(MONTH FROM start_timestamp);
+
+💡 Insight:
+Emily can identify trends in rental revenue. Seasonal peaks and dips can inform pricing strategies, staffing, and marketing plans. The grand total helps evaluate overall business performance.
+
+6. What is the total membership revenue for every combination of year, month, and membership type?
+
+SELECT 
+    EXTRACT(YEAR FROM start_date) AS year,
+    EXTRACT(MONTH FROM start_date) AS month,
+    mt.name AS membership_type_name,
+    SUM(total_paid) AS total_revenue
+FROM membership m
+JOIN membership_type mt ON m.membership_type_id = mt.id
+GROUP BY year, month, mt.name
+ORDER BY year, month, mt.name;
+
+💡 Insight:
+This breakdown helps identify which membership types are most popular and when customers are more likely to buy them. Emily can use this to optimize marketing campaigns or introduce new membership tiers.
+
+7. What is the membership revenue by type and month for 2023, including subtotals and the grand total?
+
+SELECT 
+    name AS membership_type_name,
+    EXTRACT(MONTH FROM start_date) AS month,
+    SUM(total_paid) AS total_revenue
+FROM membership m
+JOIN membership_type mt ON m.membership_type_id = mt.id
+WHERE EXTRACT(YEAR FROM start_date) = 2023
+GROUP BY CUBE (
+    EXTRACT(MONTH FROM start_date), 
+    name
+)
+ORDER BY name, month;
+
+💡 Insight:
+By analyzing the 2023 data, Emily can see not just individual revenue per type and month, but also subtotals per month and type. This helps in refining membership pricing and bundling for future years.
+
+8. How are customers segmented based on the number of rentals?
+
+WITH cte AS (
+    SELECT 
+        customer_id,
+        COUNT(*) AS rental_count,
+        CASE 
+            WHEN COUNT(*) > 10 THEN 'more than 10'
+            WHEN COUNT(*) BETWEEN 5 AND 10 THEN 'between 5 and 10'
+            ELSE 'fewer than 5'
+        END AS category
+    FROM rental
+    GROUP BY customer_id
+)
+SELECT 
+    category AS rental_count_category,
+    COUNT(*) AS customer_count
+FROM cte
+GROUP BY category
+ORDER BY customer_count;
+
+💡 Insight:
+Emily can use this segmentation to tailor loyalty programs. High-frequency renters might get discounts or perks, while low-frequency users could be targeted with re-engagement campaigns.
