@@ -27,37 +27,17 @@ membership	Logs customer membership purchases
 ## ❓ Business Questions
 Emily, the owner of the bike rental shop, wants data-driven answers to the following questions:
 
-Bike Inventory by Category
-➤ How many bikes does the shop own in each category?
-Show only categories with more than 2 bikes.
 
-Memberships by Customer
-➤ How many memberships has each customer purchased?
-Include customers with 0 memberships. Sort by the highest count.
+1. How many bikes does the shop own in each category, considering only categories that have more than 2 bikes?   
+2. How many memberships has each customer purchased, including those who haven't purchased any, and sorted by the highest membership count? 
+3. What are the new discounted rental prices (hourly and daily) for each bike based on its category, along with the original prices for comparison?
+4. How many bikes are currently available and how many are rented, shown separately for each bike category?
+5. What is the total rental revenue broken down by month, year, and across all years, including subtotals and a final grand total?
+6. What is the total membership revenue for every combination of year, month, and membership type?
+7. For the year 2023, what is the membership revenue by type and month, including all subtotals and a grand total across all types and months?
+8. How are customers segmented based on their rental history, categorized as: ‘fewer than 5’, ‘between 5 and 10’, and ‘more than 10’ rentals, along with the count of customers in each segment?
 
-New Discounted Rental Prices
-➤ What will the new prices be after applying winter discounts?
-Calculate and display old vs. new prices (hourly and daily) for each bike based on its category.
 
-Bike Availability and Rentals by Category
-➤ How many bikes are currently available and how many are rented, broken down by category?
-
-Rental Revenue by Time
-➤ What is the total revenue from rentals by:
-Month
-Year
-All-time
-Display subtotals and grand totals.
-
-Membership Revenue by Type and Time
-➤ What is the total revenue from memberships for each combination of year, month, and membership type?
-
-2023 Membership Revenue with Totals
-➤ For 2023, what is the membership revenue by type and month, including subtotals and grand total?
-
-Customer Segmentation by Rental Count
-➤ How are customers segmented based on the number of rentals?
-Group customers into: fewer than 5, between 5 and 10, more than 10
 
 ### Query solutions are provided in:
 📄 SOLUTION-Bike_Rental_Case_Study.txt
