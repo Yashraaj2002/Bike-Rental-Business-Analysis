@@ -1,4 +1,4 @@
-# 🚴‍♀️ Bike Rental Shop – SQL Case Study
+# 🚴‍♀️ Freedo Bike Rental Shop – SQL Case Study
 
 ## 📘 Overview
 This project simulates a real-world scenario where a bike rental shop owner, Emily, wants to make data-driven decisions to grow her business. You’ve been brought on as an SQL analyst to extract key insights from the shop’s database using SQL.
